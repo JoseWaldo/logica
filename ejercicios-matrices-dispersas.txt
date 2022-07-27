@@ -1,0 +1,99 @@
+------------ NOTAS ------------
+Multiplicación de matrices:
+mn x np 
+
+- quedando la matriz como mxp.  
+- la dimension de las columnas de la matriz 1 debe ser igual a las
+  dimensiones de las filas de la matriz 2. 
+
+A*B =? A*B'
+
+------------ EJERCICIO ------------
+Se tiene una matriz A representada como lista ligada en forma 1.
+Se tiene otra matriz B representada en tripletas.
+Elabore algoritmo (programa) que haga el producto A*B y que deje el resultado representado como lista ligada en forma 2. 
+Su programa debe crear las dos primeras matrices generando los datos en forma aleatoria. 
+Tenga en cuenta que el máximo número de filas o columnas debe ser 8, y que las matrices que cree se puedan multiplicar.
+Su algoritmo debe imprimir en forma de cuadrícula, las matrices generadas y la matriz resultado.
+
+
+MatrizF2 multiplicarMatrices(MatrizF1 a, MatrizTripleta b)
+
+    MatrizF2 c
+
+    int gradoFilaA, gradoFilaB, gradoColA, gradoColB
+    gradoFilaA = a.retornaNodoCabeza().retornaDato().retornaFila()
+    gradoColA = a.retornaNodoCabeza().retornaDato().retornaCol()
+    gradoFilaB = b.retornaNumeroFilas()
+    gradoColB = b.retornaNumeroColumnas()
+
+    if(gradoColA != gradoFilaB)
+        escribir("Dimensiones no validas")
+        return null
+    fin(if)
+
+    MatrizTripleta bt = b.transpuesta()
+    c = new MatrizF2(gradoFilaA,gradoColB)
+    p = a.primerNodo()
+    
+    // Para poder recorrer la matriz en tripletas
+    int contador = 1
+    int tope = bt.retornaNumeroTripletas()
+    //Empezar a recorrer por filas la MatA
+    
+    while (!finDeRecorrido(p)){
+      r = p.retornaLd()
+      filaActual = r.retornaDato().retornaFila()
+      columnaActual = bt.retornaTripleta(contador).retornaFila()
+      suma = 0
+      while (r != p && contador < = tope)
+        //Recorrido dentro de la fila
+        tripletaA = r.retornaDato()
+        tripletaBt = bt.retornaTripleta(contador)
+        if ( r == p)
+          if ( suma != 0)
+            tx = new Tripleta (filaActual,columnaActual, suma)
+            nodo = new NodoDoble(tx)
+            c.conectaPorFilas(nodo)
+            c.conectaPorCols(nodo)
+          end(if)
+          while (tripletaBt.retornaFila() == columnaActual)
+            contador = contador + 1
+            tripletaBt = bt.retornaTripleta(contador)
+          end(while)
+
+          columnaActual = tripletaBt.retornaFila() // Avanzamos a la siguiente fila en bt, (Nueva columna de b)
+          r = p.retornaLd() // Devolvemos a r, al inicio de la fila
+          continue
+        end(if)
+        if( tripletaBt.retornaFila() != columnaActual)
+          if(suma != 0)
+            tx = new Tripleta (filaActual,columnaActual, suma)
+            nodo = new NodoDoble(tx)
+            c.conectaPorFilas(nodo)
+            c.conectaPorCols(nodo)
+          end(if)
+          r = p.retornaLd()
+          columnaActual = tripletaBt.retornaFila()
+          continue
+        end(if)
+        if(tripletaA.retornaCol() < tripletaBt.retornaCol()) 
+          r = r.retornaLd()
+          tripletaA = r.retornaDato()
+          continue
+        if(tripletaA.retornaCol() > tripletaBt.retornaCol())
+          contador = contador + 1
+          tripletaBt = bt.retornaTripleta(contador)
+          continue 
+        if ( tripletaA.retornaFila() == tripletaBt.retornaFila()  && tripletaA.retornaCol()  == tripletaBt.retornaCol()) // Sig
+          suma = suma + tripletaA.retornaValor() * tripletaBt.retornaValor()
+          contador = contador + 1
+          r = r.retornaLd()
+          continue 
+        contador = contador + 1
+      end(while)
+      p = p.retornaDato().retornaValor() // Avanza al siguiente nodo cabeza
+    }
+    return c
+
+fin(multiplicarMatrices)
